@@ -10,7 +10,7 @@ namespace CodeInterview_Automation
 {
     internal class GoogleFinance_UI
     {
-        public string baseURL = "http://google.com/finance";
+        public string baseURL = "https://www.google.com/finance/quote/SOFI:NASDAQ";
         IWebDriver chromeDriver;
         public void StartExecution()
         {
@@ -18,14 +18,23 @@ namespace CodeInterview_Automation
             chromeDriver = new ChromeDriver();
             chromeDriver.Navigate().GoToUrl(baseURL);
 
-            //Search for element to enter text in the search field
-            chromeDriver.Manage().Timeouts().ImplicitWait = TimeSpan.FromSeconds(5);
-            chromeDriver.FindElement(By.CssSelector(".Ax4B8 ZAGvjd")).SendKeys("SOFI");
+            //Scroll down to the location of the element
+            WebElement element = (WebElement)chromeDriver.FindElement(By.ClassName("T4hLP"));
+            ((IJavaScriptExecutor)chromeDriver).ExecuteScript("arguments[0].scrollIntoView(true);", element);
 
-            //Search for element to click icon to start the search engine
-            chromeDriver.Manage().Timeouts().ImplicitWait = TimeSpan.FromSeconds(15);
-            chromeDriver.FindElement(By.ClassName("eEMh0d")).Click();
+            //Search element to click the financial values of each quarter
+            chromeDriver.Manage().Timeouts().ImplicitWait = TimeSpan.FromSeconds(10);
+            var verifyFinancialValues = chromeDriver.FindElements(By.ClassName("Dez8Wc"));
 
+            //Cycle through each element
+            for (int i = 0; i < verifyFinancialValues.Count; i++)
+            {
+                if (verifyFinancialValues.Count > 0)
+                {    
+                    verifyFinancialValues[i].Click();
+                }
+            }
+            
         }
     }
 }
